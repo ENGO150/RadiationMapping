@@ -20,7 +20,7 @@ void setup()
 
     //INIT PINS
     pinMode(INPUT_PIN, INPUT);
-    attachInterrupt(digitalPinToInterrupt(INPUT_PIN), cb, FALLING);
+    attachInterrupt(digitalPinToInterrupt(INPUT_PIN), increment_counts, FALLING);
 }
 
 int last_counts = -1;
