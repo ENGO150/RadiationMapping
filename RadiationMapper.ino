@@ -1,6 +1,6 @@
 /*
 This is part of RadiationMapping
-Copyright (C) 2022 Václav Šmejkal
+Copyright (C) 2024 Václav Šmejkal
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
