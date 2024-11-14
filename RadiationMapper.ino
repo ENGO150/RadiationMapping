@@ -1,21 +1,19 @@
+#include <list>
+
 #define INPUT_PIN D6 //VIN PIN FOR GEIGER COUNTER
 #define MEASUREMENT_TIME_MS 60000 //MINUTE
-#define MAX_CPM 5000 //HOW MANY COUNTS TO STORE
 
-unsigned long counts[MAX_CPM];
-int last_index = -1;
+std::list<unsigned long> counts; //COUNTS IN LAST MINUTE (OR MEASUREMENT_TIME_MS IF MODIFIED)
 
 //CALLBACK WHEN RADIATION PARTICLE IS DETECTED
 void IRAM_ATTR increment_counts()
 {
-    counts[(++last_index) % MAX_CPM] = millis();
+    counts.push_back(millis()); //APPEND CURRENT TIME TO LIST counts
 }
 
 void setup()
 {
-    //INIT counts
-    for (int i = 0; i < MAX_CPM; i++) counts[i] = 0;
-
+    //SERIAL COMMUNICATION INIT
     Serial.begin(9600);
 
     //INIT PINS
@@ -26,21 +24,17 @@ void setup()
 int last_counts = -1;
 void loop()
 {
-    unsigned long current_millis = millis();
+    unsigned long current_millis = millis(); //CURRENT TIME
     int current_counts = 0;
 
-    //COUNT
-    for (int i = 0; i < MAX_CPM; i++)
+    //REMOVE COUNTS OLDER THAN MEASUREMENT_TIME_MS
+    counts.remove_if([current_millis](unsigned long particle) //haha, *lambda* (cries in pure-C)
     {
-        if (counts[i] == 0) continue;
-        if (current_millis - counts[i] >= MEASUREMENT_TIME_MS) //REMOVE COUNTS OLDER THAN MEASUREMENT_TIME_MS
-        {
-            counts[i] = 0;
-            continue;
-        }
+        return (current_millis - particle >= MEASUREMENT_TIME_MS);
+    });
 
-        current_counts++; //COUNT RECENT
-    }
+    //COUNT RECENT
+    current_counts = counts.size();
 
     if (last_counts != current_counts) //PRINT CPM IF CHANGED
     {
