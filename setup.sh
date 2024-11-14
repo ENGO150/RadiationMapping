@@ -17,4 +17,4 @@
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 arduino-cli core update-index
-arduino-cli core install --additional-urls http://arduino.esp8266.com/stable/package_esp8266com_index.json esp8266:ESP8266
+arduino-cli core install --additional-urls https://dl.espressif.com/dl/package_esp32_index.json esp32:esp32
