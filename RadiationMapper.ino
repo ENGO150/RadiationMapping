@@ -18,6 +18,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 #include <list>
 
+#include "display.hpp"
 
 #define INPUT_PIN 10 //VIN PIN FOR GEIGER COUNTER
 #define MEASUREMENT_TIME_MS 60000 //MINUTE
@@ -33,8 +34,8 @@ void IRAM_ATTR increment_counts() //TODO: Possible noise
 
 void setup()
 {
-    //SERIAL COMMUNICATION INIT
-    Serial.begin(9600);
+    //INIT LCD
+    display::begin();
 
     //INIT PINS
     pinMode(INPUT_PIN, INPUT);
@@ -59,6 +60,6 @@ void loop()
     if (last_counts != current_counts) //PRINT CPM IF CHANGED
     {
         last_counts = current_counts;
-        Serial.println(String(current_counts * CALIBRATION_FACTOR) + " uSv/h");
+        display::print(String(current_counts) + " CPM", String(current_counts * CALIBRATION_FACTOR) + " uSv/h"); //TODO: Replace with OLED
     }
 }
