@@ -21,6 +21,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 #define INPUT_PIN 10 //VIN PIN FOR GEIGER COUNTER
 #define MEASUREMENT_TIME_MS 60000 //MINUTE
+#define CALIBRATION_FACTOR 0.00332 //CONSTANT FOR CONVERTING J305 CPM TO uSv/h
 
 std::list<unsigned long> counts; //COUNTS IN LAST MINUTE (OR MEASUREMENT_TIME_MS IF MODIFIED)
 
@@ -58,6 +59,6 @@ void loop()
     if (last_counts != current_counts) //PRINT CPM IF CHANGED
     {
         last_counts = current_counts;
-        Serial.println(String(current_counts) + " CPM");
+        Serial.println(String(current_counts * CALIBRATION_FACTOR) + " uSv/h");
     }
 }
