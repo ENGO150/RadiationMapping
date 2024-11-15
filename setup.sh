@@ -17,4 +17,4 @@
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 arduino-cli core update-index
-arduino-cli core install --additional-urls https://dl.espressif.com/dl/package_esp32_index.json esp32:esp32
+arduino-cli core install --additional-urls https://raw.githubusercontent.com/espressif/arduino-esp32/gh-pages/package_esp32_index.json esp32:esp32

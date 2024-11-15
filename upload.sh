@@ -16,8 +16,8 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
-board="esp32:esp32:esp32"
-port="/dev/ttyUSB0"
+board="esp32:esp32:esp32c3"
+port="/dev/ttyACM0"
 
 arduino-cli compile -b $board -p $port $(pwd | rev | cut -d "/" -f 1 | rev).ino
 arduino-cli upload -b $board -p $port $(pwd | rev | cut -d "/" -f 1 | rev).ino

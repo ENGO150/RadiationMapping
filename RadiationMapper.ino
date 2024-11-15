@@ -18,7 +18,8 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 #include <list>
 
-#define INPUT_PIN 14 //VIN PIN FOR GEIGER COUNTER
+
+#define INPUT_PIN 10 //VIN PIN FOR GEIGER COUNTER
 #define MEASUREMENT_TIME_MS 60000 //MINUTE
 
 std::list<unsigned long> counts; //COUNTS IN LAST MINUTE (OR MEASUREMENT_TIME_MS IF MODIFIED)

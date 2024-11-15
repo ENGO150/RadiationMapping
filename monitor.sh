@@ -16,8 +16,8 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
-board="esp32:esp32:esp32"
-port="/dev/ttyUSB0"
+board="esp32:esp32:esp32c3"
+port="/dev/ttyACM0"
 baudrate="9600"
 
-arduino-cli monitor -b $board -p $port -c $baudrate
+arduino-cli monitor -b $board -p $port -c $baudrate --timestamp
