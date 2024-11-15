@@ -26,7 +26,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 std::list<unsigned long> counts; //COUNTS IN LAST MINUTE (OR MEASUREMENT_TIME_MS IF MODIFIED)
 
 //CALLBACK WHEN RADIATION PARTICLE IS DETECTED
-void IRAM_ATTR increment_counts()
+void IRAM_ATTR increment_counts() //TODO: Possible noise
 {
     counts.push_back(millis()); //APPEND CURRENT TIME TO LIST counts
 }
