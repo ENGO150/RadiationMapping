@@ -35,7 +35,7 @@ namespace display
         lcd.backlight();
     }
 
-    Q
+    void print(String line_1, String line_2)
     {
         //CLEAR
         lcd.clear();
