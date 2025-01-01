@@ -18,13 +18,20 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 #include <list>
 
+#include <DHT.h>
+#include <DHT_U.h>
+
+#include <ArduinoJson.h>
+
 #include "display.hpp"
 
 #define INPUT_PIN 10 //VIN PIN FOR GEIGER COUNTER
 #define MEASUREMENT_TIME_MS 60000 //MINUTE
-#define CALIBRATION_FACTOR 0.00332 //CONSTANT FOR CONVERTING J305 CPM TO uSv/h
+#define SEND_TIME_MS 1000 //HOW OFTEN TO SEND DATA
+//#define CALIBRATION_FACTOR 0.00332 //CONSTANT FOR CONVERTING J305 CPM TO uSv/h
 
 std::list<unsigned long> counts; //COUNTS IN LAST MINUTE (OR MEASUREMENT_TIME_MS IF MODIFIED)
+unsigned long last_send_time = 0;
 
 //CALLBACK WHEN RADIATION PARTICLE IS DETECTED
 void IRAM_ATTR increment_counts() //TODO: Possible noise
@@ -32,10 +39,20 @@ void IRAM_ATTR increment_counts() //TODO: Possible noise
     counts.push_back(millis()); //APPEND CURRENT TIME TO LIST counts
 }
 
+DHT_Unified dht(9, DHT11);
+
 void setup()
 {
-    //INIT LCD
-    display::begin();
+    Serial.begin(9600);
+
+    //INIT DHT11
+    dht.begin();
+    sensor_t sensor;
+    dht.temperature().getSensor(&sensor);
+    dht.humidity().getSensor(&sensor);
+
+    /*//INIT LCD
+    display::begin();*/
 
     //INIT PINS
     pinMode(INPUT_PIN, INPUT);
@@ -46,7 +63,7 @@ int last_counts = -1;
 void loop()
 {
     unsigned long current_millis = millis(); //CURRENT TIME
-    int current_counts = 0;
+    //int current_counts = 0;
 
     //REMOVE COUNTS OLDER THAN MEASUREMENT_TIME_MS
     counts.remove_if([current_millis](unsigned long particle) //haha, *lambda* (cries in pure-C)
@@ -54,12 +71,33 @@ void loop()
         return (current_millis - particle >= MEASUREMENT_TIME_MS);
     });
 
-    //COUNT RECENT
+    /*//COUNT RECENT
     current_counts = counts.size();
 
     if (last_counts != current_counts) //PRINT CPM IF CHANGED
     {
         last_counts = current_counts;
         display::print(String(current_counts) + " CPM", String(current_counts * CALIBRATION_FACTOR) + " uSv/h"); //TODO: Replace with OLED
+    }*/
+
+    //SEND CURRENT STATE IN JSON
+    if (current_millis - last_send_time >= SEND_TIME_MS)
+    {
+        JsonDocument doc;
+        sensors_event_t event;
+
+        //SERIALIZE
+        doc["cpm"] = counts.size();
+
+        dht.temperature().getEvent(&event);
+        doc["temperature"] = event.temperature;
+
+        dht.humidity().getEvent(&event);
+        doc["humidity"] = event.relative_humidity;
+        
+        serializeJson(doc, Serial); //SEND
+        Serial.println(); //TODO: Implement WiFi
+
+        last_send_time = current_millis;
     }
 }
