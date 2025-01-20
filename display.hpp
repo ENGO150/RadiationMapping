@@ -20,4 +20,5 @@ namespace display
 {
     void begin(void); //INIT LCD DISPLAY
     void print(String line_1, String line_2); //PRINT INTO LCD (OVERWRITING)
+    void print(String line_1, String line_2, bool end); //PRINT INTO LCD WITH OPTION TO PRINT FROM END
 }
