@@ -37,17 +37,25 @@ namespace display
 
     void print(String line_1, String line_2)
     {
+        print(line_1, line_2, false);
+    }
+
+    void print(String line_1, String line_2, bool end)
+    {
         //CLEAR
-        lcd.clear();
-    
+        if (!end) lcd.clear();
+
         //LINE 1
-        lcd.setCursor(0, 0);
-        lcd.print(line_1);
+        if (line_1 != "")
+        {
+            lcd.setCursor(end ? 16 - line_1.length() : 0, 0);
+            lcd.print(line_1);
+        }
 
         //LINE 2
-        if (line_2 != NULL)
+        if (line_2 != "")
         {
-            lcd.setCursor(0, 1);
+            lcd.setCursor(end ? 16 - line_2.length() : 0, 1);
             lcd.print(line_2);
         }
     }
